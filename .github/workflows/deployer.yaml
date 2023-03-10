@@ -19,7 +19,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: /*
+          path: /*.py
 
       - name: "upload-folder"
         uses: "google-github-actions/upload-cloud-storage@v1"
