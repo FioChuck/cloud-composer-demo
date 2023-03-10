@@ -7,10 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-  job_id:
-    permissions:
-      contents: "read"
-      id-token: "write"
 
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +19,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: /root/dags/
+          path: /*
 
       - name: "upload-folder"
         uses: "google-github-actions/upload-cloud-storage@v1"
