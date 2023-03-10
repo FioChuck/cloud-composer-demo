@@ -19,10 +19,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: /path/
+          path: /*
 
       - name: "upload-folder"
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
-          path: "/"
+          path: "/*"
           destination: "cf-cloud-composer-dags"
