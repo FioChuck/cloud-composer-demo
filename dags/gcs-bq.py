@@ -9,7 +9,7 @@ args = {
 with DAG(
     dag_id='hello_world_airflow',
     default_args=args,
-    schedule_interval='5 * * * *',
+    schedule_interval='*/5 * * * *',
     start_date=days_ago(1),
 ) as dag:
 
