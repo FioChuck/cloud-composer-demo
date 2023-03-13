@@ -152,7 +152,7 @@ with DAG(
     bq_to_bq = BigQueryOperator(
         task_id="bq_to_bq",
         sql="SELECT count(*) as count FROM `cf-data-analytics.staging.test`",
-        destination_dataset_table='cf-data-analytics:staging.test2',
+        destination_dataset_table='cf-data-analytics.staging.test2',
         write_disposition='WRITE_TRUNCATE',
         create_disposition='CREATE_IF_NEEDED',
         use_legacy_sql=False,
