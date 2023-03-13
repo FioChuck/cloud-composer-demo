@@ -17,10 +17,10 @@ with DAG(
 
     gcs_to_bq_example = GoogleCloudStorageToBigQueryOperator(
         task_id="gcs_to_bq_example",
-        bucket='cf-spark-jobs',
+        bucket='cf-spark-external',
         source_format='parquet',
         source_objects=[
-            'data/weather/*.parquet'],
+            'googl-market-data/*.parquet'],
         destination_project_dataset_table='staging.test',
         schema_fields=[
             {
