@@ -20,7 +20,7 @@ with DAG(
         bucket='cf-spark-jobs',
         source_format='parquet',
         source_objects=[
-            'gs://cf-spark-jobs/data/weather/*.parquet'],
+            'gs://cf-spark-jobs/data/weather/*.snappy.parquet'],
         destination_project_dataset_table='staging.test',
         schema_fields=[
             {
@@ -149,17 +149,17 @@ with DAG(
         write_disposition='WRITE_TRUNCATE'
     )
 
-    # bq_to_bq = BigQueryOperator(
-    #     task_id="bq_to_bq",
-    #     sql="SELECT count(*) as count FROM `raw_bikesharing.stations`",
-    #     destination_dataset_table='dwh_bikesharing.temporary_stations_count',
-    #     write_disposition='WRITE_TRUNCATE',
-    #     create_disposition='CREATE_IF_NEEDED',
-    #     use_legacy_sql=False,
-    #     priority='BATCH'
-    # )
+    bq_to_bq = BigQueryOperator(
+        task_id="bq_to_bq",
+        sql="SELECT count(*) as count FROM `cf-data-analytics:staging.test`",
+        destination_dataset_table='cf-data-analytics:staging.test2',
+        write_disposition='WRITE_TRUNCATE',
+        create_disposition='CREATE_IF_NEEDED',
+        use_legacy_sql=False,
+        priority='BATCH'
+    )
 
-    gcs_to_bq_example
+    gcs_to_bq_example >> bq_to_bq
 
 if __name__ == "__main__":
     dag.cli()
