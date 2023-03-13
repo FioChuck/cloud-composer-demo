@@ -23,6 +23,11 @@ with DAG(
         bash_command='echo World',
     )
 
+    print_world2 = BashOperator(
+        task_id='print_world2',
+        bash_command='echo World2',
+    )
+
     print_hello >> print_world
 
 if __name__ == "__main__":
