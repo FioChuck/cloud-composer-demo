@@ -26,3 +26,11 @@ jobs:
         with:
           path: "dags"
           destination: "cf-cloud-composer-dags"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 363.0.0"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
