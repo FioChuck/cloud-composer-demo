@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
+from airflow.contrib.operators.bigquery_operator import BigQueryOperator
 
 args = {
     'owner': 'packt-developer',
@@ -14,27 +15,12 @@ with DAG(
     start_date=days_ago(1),
 ) as dag:
 
-    print_hello = BashOperator(
-        task_id='print_hello',
-        bash_command='echo Hello',
-    )
-
-    print_world = BashOperator(
-        task_id='print_world',
-        bash_command='echo World',
-    )
-
-    print_world2 = BashOperator(
-        task_id='print_world2',
-        bash_command='echo World2',
-    )
-
     gcs_to_bq_example = GoogleCloudStorageToBigQueryOperator(
         task_id="gcs_to_bq_example",
         bucket='cf-spark-jobs',
         source_format='parquet',
         source_objects=[
-            'data/weather/*.parquet'],
+            'data/weather/*'],
         destination_project_dataset_table='staging.test',
         schema_fields=[
             {
@@ -163,7 +149,17 @@ with DAG(
         write_disposition='WRITE_TRUNCATE'
     )
 
-    gcs_to_bq_example >> print_hello >> print_world >> print_world2
+    # bq_to_bq = BigQueryOperator(
+    #     task_id="bq_to_bq",
+    #     sql="SELECT count(*) as count FROM `raw_bikesharing.stations`",
+    #     destination_dataset_table='dwh_bikesharing.temporary_stations_count',
+    #     write_disposition='WRITE_TRUNCATE',
+    #     create_disposition='CREATE_IF_NEEDED',
+    #     use_legacy_sql=False,
+    #     priority='BATCH'
+    # )
+
+    gcs_to_bq_example
 
 if __name__ == "__main__":
     dag.cli()
