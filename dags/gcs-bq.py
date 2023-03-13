@@ -32,7 +32,7 @@ with DAG(
     gcs_to_bq_example = GoogleCloudStorageToBigQueryOperator(
         task_id="gcs_to_bq_example",
         bucket='cf-spark-jobs',
-        source_format='parquet'
+        source_format='parquet',
         source_objects=[
             'data/weather/part-00000-dd4ca5b8-d037-4e38-8cea-d49fa82dff3b-c000.snappy.parquet'],
         destination_project_dataset_table='staging.test',
