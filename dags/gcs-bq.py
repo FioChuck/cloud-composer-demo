@@ -20,7 +20,7 @@ with DAG(
         bucket='cf-spark-jobs',
         source_format='parquet',
         source_objects=[
-            'gs://cf-spark-jobs/data/weather/*.snappy.parquet'],
+            'data/weather/*.parquet'],
         destination_project_dataset_table='staging.test',
         schema_fields=[
             {
