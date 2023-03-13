@@ -42,4 +42,7 @@ jobs:
           version: ">= 363.0.0"
 
       - name: "deploy cloud composer dag"
-        run: "gcloud info"
+        run: "gcloud composer environments storage dags import \
+          --environment etl-orchestration-pool \
+          --location us-central1 \
+          --source gs://cf-cloud-composer-dags/dags/gcs-bq.py"
