@@ -25,125 +25,67 @@ with DAG(
         schema_fields=[
             {
                 "mode": "NULLABLE",
-                "name": "id",
+                "name": "symbol",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "datetime",
+                "type": "STRING"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "tm",
                 "type": "INTEGER"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "lon",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "lat",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "desc_short",
-                "type": "STRING"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "desc_long",
-                "type": "STRING"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "temp",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "feels_like",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "temp_min",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "temp_max",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "pressure",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "humidity",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "visibility",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "wind_speed",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "wind_deg",
-                "type": "FLOAT"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "clouds",
-                "type": "FLOAT"
             },
             {
                 "mode": "NULLABLE",
                 "name": "dt",
-                "type": "INTEGER"
+                "type": "DATE"
             },
             {
                 "mode": "NULLABLE",
-                "name": "sunrise",
-                "type": "INTEGER"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "sunset",
-                "type": "INTEGER"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "timezone",
-                "type": "INTEGER"
-            },
-            {
-                "mode": "NULLABLE",
-                "name": "city",
+                "name": "exchange_code",
                 "type": "STRING"
             },
             {
                 "mode": "NULLABLE",
-                "name": "processing_time",
-                "type": "TIMESTAMP"
+                "name": "trade_price",
+                "type": "FLOAT"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "trade_size",
+                "type": "INTEGER"
             },
             {
                 "fields": [
                     {
-                        "mode": "NULLABLE",
-                        "name": "uuid",
-                        "type": "STRING"
-                    },
-                    {
-                        "mode": "NULLABLE",
-                        "name": "source_timestamp",
-                        "type": "INTEGER"
+                        "fields": [
+                            {
+                                "mode": "NULLABLE",
+                                "name": "element",
+                                "type": "STRING"
+                            }
+                        ],
+                        "mode": "REPEATED",
+                        "name": "list",
+                        "type": "RECORD"
                     }
                 ],
                 "mode": "NULLABLE",
-                "name": "datastream_metadata",
+                "name": "trade_condition",
                 "type": "RECORD"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "trade_id",
+                "type": "INTEGER"
+            },
+            {
+                "mode": "NULLABLE",
+                "name": "tape",
+                "type": "STRING"
             }
         ],
         write_disposition='WRITE_TRUNCATE'
