@@ -28,7 +28,7 @@ with DAG(
         bash_command='echo World2',
     )
 
-    print_hello >> print_world
+    print_hello >> print_world >> print_world2
 
 if __name__ == "__main__":
     dag.cli()
