@@ -3,7 +3,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.contrib.operators.bigquery_operator import BigQueryOperator
-
+from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 args = {
     'owner': 'packt-developer',
 }
@@ -99,6 +99,23 @@ with DAG(
         create_disposition='CREATE_IF_NEEDED',
         use_legacy_sql=False,
         priority='BATCH'
+    )
+
+    task3 = BigQueryInsertJobOperator(
+        task_id='snapshot_task',
+        dag=dag,
+        location='<dataset-location>',
+        configuration={
+            'query': {
+                'query': 'SELECT * FROM dataset.tableA',
+                'useLegacySql': False,
+                'destinationTable': {
+                    'project_id': 'cf-data-analytics',
+                    'dataset_id': 'test',
+                    'table_id': 'test',
+                },
+            }
+        },
     )
 
     gcs_to_bq_example >> bq_to_bq
