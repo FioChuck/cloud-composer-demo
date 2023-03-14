@@ -30,7 +30,7 @@ with DAG(
         source_format='parquet',
         source_objects=[
             'googl-market-data/*.parquet'],
-        destination_project_dataset_table='composer_destination.market_data2',
+        destination_project_dataset_table='composer_destination.market_data',
         schema_fields=[
             {
                 "mode": "NULLABLE",
