@@ -21,7 +21,7 @@ with DAG(
         source_format='parquet',
         source_objects=[
             'googl-market-data/*.parquet'],
-        destination_project_dataset_table='composer_destination.market_data',
+        destination_project_dataset_table='composer_destination.market_data2',
         schema_fields=[
             {
                 "mode": "NULLABLE",
@@ -105,9 +105,10 @@ with DAG(
         task_id='snapshot_task',
         dag=dag,
         location='US',
+        write_disposition='WRITE_TRUNCATE',
         configuration={
             'query': {
-                'query': 'SELECT * FROM cf-data-analytics.staging.test',
+                'query': 'SELECT * FROM cf-data-analytics.staging.test2',
                 'useLegacySql': False,
                 'destinationTable': {
                     'project_id': 'cf-data-analytics',
