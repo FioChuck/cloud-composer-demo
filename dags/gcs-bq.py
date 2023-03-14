@@ -10,15 +10,19 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.market_data2` AS
+  `cf-data-analytics.composer_destination.googl_summary` AS
 SELECT
-  COUNT(*) AS row_cnt
+  symbol,
+  MAX(trade_price) AS max_price,
+  MIN(trade_price) AS min_price
 FROM
-  cf-data-analytics.composer_destination.market_data;
+  cf-data-analytics.composer_destination.googl_stock_data
+GROUP BY
+  symbol;
 """
 
 with DAG(
-    dag_id='hello_world_airflow',
+    dag_id='googl_stock_data_ETL',
     default_args=args,
     schedule_interval='*/10 * * * *',
     start_date=days_ago(1),
@@ -30,7 +34,7 @@ with DAG(
         source_format='parquet',
         source_objects=[
             'googl-market-data/*.parquet'],
-        destination_project_dataset_table='composer_destination.market_data',
+        destination_project_dataset_table='composer_destination.googl_stock_data',
         schema_fields=[
             {
                 "mode": "NULLABLE",
@@ -100,15 +104,15 @@ with DAG(
         write_disposition='WRITE_TRUNCATE'
     )
 
-    bq_to_bq = BigQueryOperator(
-        task_id="bq_to_bq",
-        sql="SELECT count(*) as count FROM `cf-data-analytics.staging.test`",
-        destination_dataset_table='cf-data-analytics.staging.test2',
-        write_disposition='WRITE_TRUNCATE',
-        create_disposition='CREATE_IF_NEEDED',
-        use_legacy_sql=False,
-        priority='BATCH'
-    )
+    # bq_to_bq = BigQueryOperator(
+    #     task_id="bq_to_bq",
+    #     sql="SELECT count(*) as count FROM `cf-data-analytics.staging.test`",
+    #     destination_dataset_table='cf-data-analytics.staging.test2',
+    #     write_disposition='WRITE_TRUNCATE',
+    #     create_disposition='CREATE_IF_NEEDED',
+    #     use_legacy_sql=False,
+    #     priority='BATCH'
+    # )
 
     # task3 = BigQueryInsertJobOperator(
     #     task_id='snapshot_task',
@@ -128,7 +132,7 @@ with DAG(
     #     },
     # )
 
-    trend_by_month = BigQueryInsertJobOperator(
+    market_trend = BigQueryInsertJobOperator(
         task_id="snapshot_task",
         configuration={
             "query": {
@@ -138,7 +142,7 @@ with DAG(
         }
     )
 
-    gcs_to_bq_example >> bq_to_bq >> trend_by_month
+    gcs_to_bq_example >> market_trend
 
 if __name__ == "__main__":
     dag.cli()
