@@ -104,7 +104,7 @@ with DAG(
     task3 = BigQueryInsertJobOperator(
         task_id='snapshot_task',
         dag=dag,
-        location='<dataset-location>',
+        location='<US>',
         configuration={
             'query': {
                 'query': 'SELECT * FROM dataset.tableA',
@@ -118,7 +118,7 @@ with DAG(
         },
     )
 
-    gcs_to_bq_example >> bq_to_bq
+    gcs_to_bq_example >> bq_to_bq >> task3
 
 if __name__ == "__main__":
     dag.cli()
