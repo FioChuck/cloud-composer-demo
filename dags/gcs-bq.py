@@ -8,6 +8,17 @@ args = {
     'owner': 'packt-developer',
 }
 
+query = f"""
+CREATE OR REPLACE TABLE
+  `cf-data-analytics.composer_destination.market_data2` AS
+SELECT
+  COUNT(*) AS cow_cnt
+FROM
+  cf-data-analytics.composer_destination.market_data
+GROUP BY
+  case_year;
+"""
+
 with DAG(
     dag_id='hello_world_airflow',
     default_args=args,
@@ -101,22 +112,32 @@ with DAG(
         priority='BATCH'
     )
 
-    task3 = BigQueryInsertJobOperator(
-        task_id='snapshot_task',
-        dag=dag,
-        location='US',
-        write_disposition='WRITE_TRUNCATE',
+    # task3 = BigQueryInsertJobOperator(
+    #     task_id='snapshot_task',
+    #     dag=dag,
+    #     location='US',
+    #     write_disposition='WRITE_TRUNCATE',
+    #     configuration={
+    #         'query': {
+    #             'query': 'SELECT * FROM cf-data-analytics.staging.test2',
+    #             'useLegacySql': False,
+    #             'destinationTable': {
+    #                 'project_id': 'cf-data-analytics',
+    #                 'dataset_id': 'test',
+    #                 'table_id': 'test',
+    #             },
+    #         }
+    #     },
+    # )
+
+    trend_by_month = BigQueryInsertJobOperator(
+        task_id="snapshot_task",
         configuration={
-            'query': {
-                'query': 'SELECT * FROM cf-data-analytics.staging.test2',
-                'useLegacySql': False,
-                'destinationTable': {
-                    'project_id': 'cf-data-analytics',
-                    'dataset_id': 'test',
-                    'table_id': 'test',
-                },
+            "query": {
+                "query": query,
+                "useLegacySql": False
             }
-        },
+        }
     )
 
     gcs_to_bq_example >> bq_to_bq >> task3
