@@ -140,7 +140,7 @@ with DAG(
         }
     )
 
-    gcs_to_bq_example >> bq_to_bq >> task3
+    gcs_to_bq_example >> bq_to_bq >> trend_by_month
 
 if __name__ == "__main__":
     dag.cli()
