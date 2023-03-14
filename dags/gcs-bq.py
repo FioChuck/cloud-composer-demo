@@ -21,7 +21,7 @@ with DAG(
         source_format='parquet',
         source_objects=[
             'googl-market-data/*.parquet'],
-        destination_project_dataset_table='staging.test',
+        destination_project_dataset_table='composer_destination.market_data',
         schema_fields=[
             {
                 "mode": "NULLABLE",
@@ -104,7 +104,7 @@ with DAG(
     task3 = BigQueryInsertJobOperator(
         task_id='snapshot_task',
         dag=dag,
-        location='<US>',
+        location='US',
         configuration={
             'query': {
                 'query': 'SELECT * FROM cf-data-analytics.staging.test',
