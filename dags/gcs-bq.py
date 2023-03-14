@@ -12,11 +12,9 @@ query = f"""
 CREATE OR REPLACE TABLE
   `cf-data-analytics.composer_destination.market_data2` AS
 SELECT
-  COUNT(*) AS cow_cnt
+  COUNT(*) AS row_cnt
 FROM
-  cf-data-analytics.composer_destination.market_data
-GROUP BY
-  case_year;
+  cf-data-analytics.composer_destination.market_data;
 """
 
 with DAG(
