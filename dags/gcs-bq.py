@@ -107,7 +107,7 @@ with DAG(
         location='<US>',
         configuration={
             'query': {
-                'query': 'SELECT * FROM dataset.tableA',
+                'query': 'SELECT * FROM cf-data-analytics.staging.test',
                 'useLegacySql': False,
                 'destinationTable': {
                     'project_id': 'cf-data-analytics',
