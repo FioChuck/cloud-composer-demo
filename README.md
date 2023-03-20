@@ -1,4 +1,6 @@
-# cloud-composer-demo
+# TL;DR
+
+A simple Cloud Composer Airflow DAG _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This Demo was designed as a deployment template for Cloud Composer via GitHub actions. It also acts as a Dataplex Data Lineage demo.
 
 ```shell
 gcloud beta composer environments update etl-orchestration-pool \
