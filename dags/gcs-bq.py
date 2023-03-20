@@ -1,9 +1,8 @@
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
-from airflow.contrib.operators.bigquery_operator import BigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
+
 args = {
     'owner': 'packt-developer',
 }
@@ -22,14 +21,14 @@ GROUP BY
 """
 
 with DAG(
-    dag_id='googl_stock_data_ETL',
+    dag_id='googl_stock_data_etl',
     default_args=args,
-    schedule_interval='*/10 * * * *',
+    schedule_interval='*/10 * * * *',  # set schedule - at every tenth minute
     start_date=days_ago(1),
 ) as dag:
 
-    gcs_to_bq_example = GoogleCloudStorageToBigQueryOperator(
-        task_id="gcs_to_bq_example",
+    gcs_parquet_ingestion = GoogleCloudStorageToBigQueryOperator(
+        task_id="gcs_parquet_ingestion",
         bucket='cf-spark-external',
         source_format='parquet',
         source_objects=[
@@ -104,36 +103,8 @@ with DAG(
         write_disposition='WRITE_TRUNCATE'
     )
 
-    # bq_to_bq = BigQueryOperator(
-    #     task_id="bq_to_bq",
-    #     sql="SELECT count(*) as count FROM `cf-data-analytics.staging.test`",
-    #     destination_dataset_table='cf-data-analytics.staging.test2',
-    #     write_disposition='WRITE_TRUNCATE',
-    #     create_disposition='CREATE_IF_NEEDED',
-    #     use_legacy_sql=False,
-    #     priority='BATCH'
-    # )
-
-    # task3 = BigQueryInsertJobOperator(
-    #     task_id='snapshot_task',
-    #     dag=dag,
-    #     location='US',
-    #     write_disposition='WRITE_TRUNCATE',
-    #     configuration={
-    #         'query': {
-    #             'query': 'SELECT * FROM cf-data-analytics.staging.test2',
-    #             'useLegacySql': False,
-    #             'destinationTable': {
-    #                 'project_id': 'cf-data-analytics',
-    #                 'dataset_id': 'test',
-    #                 'table_id': 'test',
-    #             },
-    #         }
-    #     },
-    # )
-
-    market_trend = BigQueryInsertJobOperator(
-        task_id="snapshot_task",
+    aggregation_query = BigQueryInsertJobOperator(
+        task_id="aggregation_query",
         configuration={
             "query": {
                 "query": query,
@@ -142,7 +113,7 @@ with DAG(
         }
     )
 
-    gcs_to_bq_example >> market_trend
+    gcs_parquet_ingestion >> aggregation_query
 
 if __name__ == "__main__":
     dag.cli()
