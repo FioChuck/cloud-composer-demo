@@ -24,12 +24,12 @@ This project includes a yaml file for deployment to Google Cloud using Github Ac
 The deployment yaml file found in `/.github/workflows/` defines the setup in two stages; a build stage followed by a deploy stage. These stages are described in detail below:
 
 1. Build
-   > - Authentication with GCP
-   > - Upload DAG folder as repository artifact
-   > - Upload repository artifact to Cloud Storage
+   > - Authentication with GCP - [auth](https://github.com/google-github-actions/auth)
+   > - Upload DAG folder as repository artifact - [upload-artifact](https://github.com/actions/upload-artifact)
+   > - Upload repository artifact to Cloud Storage - [upload-cloud-storage](https://github.com/google-github-actions/upload-cloud-storage)
 2. Deploy
-   > - Authentication with GCP
-   > - Setup Google Cloud SDK
+   > - Authentication with GCP - [auth](https://github.com/google-github-actions/auth)
+   > - Setup Google Cloud SDK - [setup-gcloud](https://github.com/google-github-actions/setup-gcloud)
    > - Deploy Cloud Composer SDK
 
 ## Data Lineage
