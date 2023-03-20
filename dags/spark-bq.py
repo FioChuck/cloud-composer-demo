@@ -9,7 +9,7 @@ args = {
 }
 
 with DAG(
-    dag_id='spark_googl_stock_data',
+    dag_id='spark-bq',
     default_args=args,
     schedule_interval='*/10 * * * *',  # set schedule - at every tenth minute
     start_date=days_ago(1),
