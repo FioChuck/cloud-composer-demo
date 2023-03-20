@@ -1,10 +1,10 @@
 # TL;DR
 
-A simple Cloud Composer Airflow DAG _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub actions. It also acts as a Dataplex Data Lineage demo.
+A simple Cloud Composer Airflow DAG _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
 
 # Overview
 
-The DAG included in the `/dags` folder simulate a typical ELT workflow. Distributed Parquet files in GCS are first ingested into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) operator. This operator loads the Parquet files into BigQuery and applied the Schema passed via the `schema_fields` parameter. See diagram below.
+The DAG included in the `/dags` folder simulate a typical ELT workflow. Distributed Parquet files in GCS are first loaded into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter. See diagram below.
 
 ```mermaid
 flowchart LR
