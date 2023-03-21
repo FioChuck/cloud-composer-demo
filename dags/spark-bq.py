@@ -13,7 +13,7 @@ SPARK_JOB = {
     "placement": {"cluster_name": "cluster-a7bd"},
     "spark_job": {
         "jar_file_uris": ["gs://cf-spark-jobs/template/scala-2.12/file-creator-assembly-1.0.jar"],
-        "main_class": "source.main.scala.BqDemo",
+        "main_class": "BqDemo",
     },
 }
 
