@@ -24,6 +24,7 @@ with DAG(
     default_args=args,
     schedule_interval='*/10 * * * *',  # set schedule - at every tenth minute
     start_date=days_ago(1),
+    is_paused_upon_creation=True
 ) as dag:
 
     spark_task = DataprocSubmitJobOperator(
