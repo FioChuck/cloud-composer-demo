@@ -29,10 +29,15 @@ with DAG(
 
     spark_task = DataprocSubmitJobOperator(
         task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics",
+        inlets=[BigQueryTable(
+            project_id="cf-data-analytics",
+            dataset_id='market_data',
+            table_id='googl_market_data',
+        )],
         outlets=[BigQueryTable(
             project_id="cf-data-analytics",
             dataset_id='market_data',
-            table_id='googl_spark_ingestion2',
+            table_id='googl_spark_ingestion_5',
         )]
     )
 
