@@ -125,9 +125,7 @@ with DAG(
         destination_cloud_storage_uris=[
             'gs://cf-bq-external/part-*.avro'
         ],
-        export_format='AVRO',
-        bigquery_conn_id='gcp_smoke',
-    )
+        export_format='AVRO')
 
     bq2gcp_override >> gcs_parquet_ingestion >> aggregation_query
 
