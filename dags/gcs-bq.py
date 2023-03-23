@@ -25,7 +25,7 @@ GROUP BY
 with DAG(
     dag_id='googl_stock_data_etl',
     default_args=args,
-    schedule_interval='*/10 * * * *',  # set schedule - at every tenth minute
+    schedule_interval='@once',  # set schedule - at every tenth minute
     start_date=days_ago(1),
     is_paused_upon_creation=True
 
