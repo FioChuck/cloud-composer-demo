@@ -123,7 +123,7 @@ with DAG(
         task_id='bq2gcp_override',
         source_project_dataset_table='cf-data-analytics.weather_share.atlanta_weather',
         destination_cloud_storage_uris=[
-            'gs://cf-bq-external/part-*.avro'
+            'gs://cf-spark-external/part-*.avro'
         ],
         export_format='AVRO')
 
