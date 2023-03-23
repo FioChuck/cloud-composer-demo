@@ -22,7 +22,7 @@ SPARK_JOB = {
 with DAG(
     dag_id='spark-bq',
     default_args=args,
-    schedule_interval='*/10 * * * *',  # set schedule - at every tenth minute
+    schedule_interval='@once',  # set schedule - at every tenth minute
     start_date=days_ago(1),
     is_paused_upon_creation=True
 ) as dag:
@@ -37,7 +37,7 @@ with DAG(
         outlets=[BigQueryTable(
             project_id="cf-data-analytics",
             dataset_id='market_data',
-            table_id='googl_spark_ingestion_8',
+            table_id='googl_spark_ingestion_10',
         )]
     )
 
