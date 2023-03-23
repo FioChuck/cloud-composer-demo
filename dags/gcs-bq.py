@@ -2,6 +2,8 @@ from airflow import DAG
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
+from airflow.contrib.operators.bigquery_to_gcs import BigQueryToCloudStorageOperator
+
 
 args = {
     'owner': 'packt-developer',
@@ -115,7 +117,19 @@ with DAG(
         }
     )
 
-    gcs_parquet_ingestion >> aggregation_query
+# gs://cf-bq-external/atl_avg_temp.csv
+
+    bq2gcp_override = BigQueryToCloudStorageOperator(
+        task_id='bq2gcp_override',
+        source_project_dataset_table='cf-data-analytics.weather_share.atlanta_weather',
+        destination_cloud_storage_uris=[
+            'gs://cf-bq-external/part-*.avro'
+        ],
+        export_format='AVRO',
+        bigquery_conn_id='gcp_smoke',
+    )
+
+    bq2gcp_override >> gcs_parquet_ingestion >> aggregation_query
 
 if __name__ == "__main__":
     dag.cli()
