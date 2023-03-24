@@ -11,13 +11,13 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.googl_summary` AS
+  `cf-data-analytics.composer_destination.googl_bq_ingestion` AS
 SELECT
   symbol,
   MAX(trade_price) AS max_price,
   MIN(trade_price) AS min_price
 FROM
-  cf-data-analytics.composer_destination.googl_stock_data
+  cf-data-analytics.composer_destination.googl_bq_summarized
 GROUP BY
   symbol;
 """
@@ -37,7 +37,7 @@ with DAG(
         source_format='parquet',
         source_objects=[
             'googl-market-data/*.parquet'],
-        destination_project_dataset_table='composer_destination.googl_stock_data',
+        destination_project_dataset_table='composer_destination.googl_bq_ingestion',
         schema_fields=[
             {
                 "mode": "NULLABLE",
@@ -117,17 +117,7 @@ with DAG(
         }
     )
 
-# gs://cf-bq-external/atl_avg_temp.csv
-
-    bq2gcp_override = BigQueryToCloudStorageOperator(
-        task_id='bq2gcp_override',
-        source_project_dataset_table='cf-data-analytics.weather_share.atlanta_weather',
-        destination_cloud_storage_uris=[
-            'gs://cf-spark-external/part-*.avro'
-        ],
-        export_format='AVRO')
-
-    bq2gcp_override >> gcs_parquet_ingestion >> aggregation_query
+    gcs_parquet_ingestion >> aggregation_query
 
 if __name__ == "__main__":
     dag.cli()

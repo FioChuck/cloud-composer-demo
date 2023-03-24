@@ -36,8 +36,8 @@ with DAG(
         )],
         outlets=[BigQueryTable(
             project_id="cf-data-analytics",
-            dataset_id='market_data',
-            table_id='googl_spark_ingestion_10',
+            dataset_id='composer_destination',
+            table_id='googl_spark_summarized',
         )]
     )
 
