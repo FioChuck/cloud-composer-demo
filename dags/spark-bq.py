@@ -31,13 +31,13 @@ with DAG(
         task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics",
         inlets=[BigQueryTable(
             project_id="cf-data-analytics",
-            dataset_id='zone_1',
-            table_id='googl_market_data',
+            dataset_id='raw_zone',
+            table_id='googl_data',
         )],
         outlets=[BigQueryTable(
             project_id="cf-data-analytics",
             dataset_id='composer_destination',
-            table_id='googl_spark_summarized',
+            table_id='googl_dataproc_summarized',
         )]
     )
 
