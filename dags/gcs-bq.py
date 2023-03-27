@@ -11,13 +11,13 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.googl_bq_ingestion` AS
+  `cf-data-analytics.composer_destination.googl_bq_summarized` AS
 SELECT
   symbol,
   MAX(trade_price) AS max_price,
   MIN(trade_price) AS min_price
 FROM
-  cf-data-analytics.composer_destination.googl_bq_summarized
+  cf-data-analytics.composer_destination.googl_bq_ingestion
 GROUP BY
   symbol;
 """
