@@ -42,12 +42,12 @@ jobs:
         with:
           version: ">= 363.0.0"
 
-      - name: "delete cloud composer dag"
+      - name: "delete cloud composer dag from airflow"
         run: "gcloud composer environments run etl-orchestration-pool \
           --location us-central1 \
           dags delete -- spark-bq"
 
-      - name: "delete cloud composer dag2"
+      - name: "delete cloud composer dag2 from airflow"
         run: "gcloud composer environments run etl-orchestration-pool \
           --location us-central1 \
           dags delete -- gcs-bq"
