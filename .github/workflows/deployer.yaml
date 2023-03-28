@@ -45,12 +45,12 @@ jobs:
       - name: "delete cloud composer dag"
         run: "gcloud composer environments run etl-orchestration-pool \
           --location us-central1 \
-          delete_dag --spark-bq"
+          dags delete --spark-bq"
 
       - name: "delete cloud composer dag2"
         run: "gcloud composer environments run etl-orchestration-pool \
           --location us-central1 \
-          delete_dag --gcs-bq"
+          dags delete --gcs-bq"
 
       - name: "deploy cloud composer dag"
         run: "gcloud composer environments storage dags import \
