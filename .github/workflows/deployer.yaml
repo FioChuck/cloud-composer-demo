@@ -68,5 +68,3 @@ jobs:
           --location us-central1 \
           --source gs://cf-cloud-composer-dags/dags/spark-bq.py"
 
-
-gcloud components install kubectl
