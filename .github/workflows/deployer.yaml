@@ -42,9 +42,8 @@ jobs:
         with:
           version: ">= 363.0.0"
 
-
       - name: "delete cloud composer dag from airflow"
-      run: "gcloud components install kubectl"
+        run: "gcloud components install kubectl"
 
       - name: "delete cloud composer dag from airflow"
         run: "gcloud composer environments run etl-orchestration-pool \
@@ -67,4 +66,3 @@ jobs:
           --environment etl-orchestration-pool \
           --location us-central1 \
           --source gs://cf-cloud-composer-dags/dags/spark-bq.py"
-
