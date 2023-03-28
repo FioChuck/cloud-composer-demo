@@ -1,10 +1,12 @@
 # TL;DR
 
-A simple Cloud Composer Airflow DAG _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
+Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
 
 # Overview
 
-The DAG included in the `/dags` folder simulate a typical ELT workflow. Distributed Parquet files in GCS are first loaded into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter. See diagram below.
+The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow.
+
+The first DAG loads partitioned Parquet files in GCS into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter. See diagram below.
 
 ```mermaid
 flowchart LR
@@ -12,6 +14,61 @@ A("Cloud Storage") -->|GoogleCloudStorageToBigQueryOperator| B("BigQuery") -->|B
 ```
 
 Next a the data is aggregated and loaded into a new table using a CTAS operation. This is accomplished using the [BigQueryInsertJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/bigquery.html#execute-bigquery-jobs) Airflow operator.
+
+The second DAG calls a Dataproc Spark Job using the `DataprocSubmitJobOperator` operator. The Spark job executes a jar file containing the following sample code:
+
+```scala
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types.IntegerType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.functions._
+import org.apache.spark.ml.linalg
+
+object BqDemo {
+  def main(args: Array[String]): Unit = {
+
+    val spark = SparkSession.builder
+      .appName("Bq Demo")
+      .getOrCreate()
+
+    val df =
+      spark.read
+        .format("bigquery") // added as dependency via sbt build
+        .option(
+          "table",
+          "cf-data-analytics.raw_zone.googl_data"
+        )
+        .load()
+
+    val df2 = df
+      .groupBy("dt")
+      .agg(max("trade_price"))
+      .orderBy("dt")
+      .withColumnRenamed("max(trade_price)", "max_price")
+
+    df2.show()
+    print("end")
+
+    df2.write
+      .format("bigquery")
+      .option(
+        "temporaryGcsBucket",
+        "cf-spark-temp"
+      ) // indirect mode destination gcs bucket
+      .option("writeMethod", "direct")
+      .mode("overwrite") // overwrite or append to destination table
+      .save(
+        "cf-data-analytics.composer_destination.googl_dataproc_summarized"
+      ) // define destination table
+  }
+}
+
+```
+
+This sample jar file can be built using the [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala)
 
 # Setup
 
@@ -30,6 +87,7 @@ The deployment yaml file found in `/.github/workflows/` defines the setup in two
 2. Deploy
    > - Authentication with GCP - [auth](https://github.com/google-github-actions/auth)
    > - Setup Google Cloud SDK - [setup-gcloud](https://github.com/google-github-actions/setup-gcloud)
+   > - Delete previous
    > - Deploy Cloud Composer SDK
 
 ## Data Lineage
