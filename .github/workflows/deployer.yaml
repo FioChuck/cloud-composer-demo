@@ -42,6 +42,16 @@ jobs:
         with:
           version: ">= 363.0.0"
 
+      - name: "delete cloud composer dag"
+        run: "gcloud composer environments run etl-orchestration-pool \
+          --location us-central1 \
+          delete_dag --spark-bq"
+
+      - name: "delete cloud composer dag2"
+        run: "gcloud composer environments run etl-orchestration-pool \
+          --location us-central1 \
+          delete_dag --gcs-bq"
+
       - name: "deploy cloud composer dag"
         run: "gcloud composer environments storage dags import \
           --environment etl-orchestration-pool \
