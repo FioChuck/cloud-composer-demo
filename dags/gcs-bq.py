@@ -23,7 +23,7 @@ GROUP BY
 """
 
 with DAG(
-    dag_id='googl_stock_data_etl',
+    dag_id='gcs-bq',
     default_args=args,
     schedule_interval='@once',  # set schedule - at every tenth minute
     start_date=days_ago(1),
