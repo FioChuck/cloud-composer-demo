@@ -1,21 +1,21 @@
 # TL;DR
 
-Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that moves Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
+Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that move partitioned Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
 
 # Overview
 
-The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow.
+The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow. Both workflows ingest and aggregate sample GOOGL stock data. The sample data is ingested into GCP using PubSub. This ingestion pattern is saved as a template [here](https://github.com/FioChuck/api-pubsub-ingest).
 
-The first DAG loads partitioned Parquet files in GCS into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter. See diagram below.
+The first DAG loads partitioned Parquet files in GCS into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter.
+
+Next the data is aggregated and loaded into a new table using a CTAS operation. This is accomplished using the [BigQueryInsertJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/bigquery.html#execute-bigquery-jobs) Airflow operator.See diagram below.
 
 ```mermaid
 flowchart LR
 A("Cloud Storage") -->|GoogleCloudStorageToBigQueryOperator| B("BigQuery") -->|BigQueryInsertJobOperator| C("BigQuery")
 ```
 
-Next a the data is aggregated and loaded into a new table using a CTAS operation. This is accomplished using the [BigQueryInsertJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/bigquery.html#execute-bigquery-jobs) Airflow operator.
-
-The second DAG calls a Dataproc Spark Job using the `DataprocSubmitJobOperator` operator. The Spark job executes a jar file containing the following sample code:
+The second example DAG calls a Dataproc Spark Job using the [DataprocSubmitJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataproc.html) operator. The Spark job executes a jar file containing the following sample code:
 
 ```scala
 import org.apache.spark.sql.SparkSession
@@ -68,7 +68,14 @@ object BqDemo {
 
 ```
 
-This sample jar file can be built using the [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala)
+This sample jar file can be built using the [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala).
+
+The entire process can be diagramed as follows:
+
+```mermaid
+flowchart LR
+A("Cloud Storage") -->|DataprocSubmitJobOperator| B("BigQuery")
+```
 
 # Setup
 
@@ -87,10 +94,13 @@ The deployment yaml file found in `/.github/workflows/` defines the setup in two
 2. Deploy
    > - Authentication with GCP - [auth](https://github.com/google-github-actions/auth)
    > - Setup Google Cloud SDK - [setup-gcloud](https://github.com/google-github-actions/setup-gcloud)
-   > - Delete previous
-   > - Deploy Cloud Composer SDK
+   > - Install [kubectl](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl) - required to remove previous DAG versions from Cloud Composer. (note: the .py files are not removed from GCS)
+   > - Delete previous DAG version; [docs](https://cloud.google.com/composer/docs/how-to/using/managing-dags#deleting_a_dag)
+   > - Deploy Cloud Composer SDK; [docs](https://cloud.google.com/composer/docs/how-to/using/managing-dags#adding)
 
 ## Data Lineage
+
+This project is a great place to start learning Dataplex lineage. Currently _(2023)_ the lineage API support Cloud Composer, BigQuery, and Data Fusion. All the processes in this project are supported and the dependencies will be autodetected if the lineage API is enabled.
 
 The following shell script must be executed in the destination project to enable Data Lineage. More info [here](https://cloud.google.com/composer/docs/composer-2/lineage-integration#enable-integration)
 
