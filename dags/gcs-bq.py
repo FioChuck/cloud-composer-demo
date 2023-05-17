@@ -25,7 +25,7 @@ GROUP BY
 with DAG(
     dag_id='gcs-bq',
     default_args=args,
-    schedule_interval='@once',  # set schedule - at every tenth minute
+    schedule_interval='none',  # set schedule - at every tenth minute
     start_date=days_ago(1),
     max_active_runs=1,
     is_paused_upon_creation=False
