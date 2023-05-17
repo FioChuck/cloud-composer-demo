@@ -118,7 +118,7 @@ with DAG(
         }
     )
 
-    aggregation_query
+    gcs_parquet_ingestion >> aggregation_query
 
 if __name__ == "__main__":
     dag.cli()
