@@ -11,9 +11,9 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.googl_bq_summarized` AS
+  `cf-data-analytics.composer_destination.googl_bq_summarized2` AS
 SELECT
-  symbol,
+  symbol, 
   MAX(trade_price) AS max_price,
   MIN(trade_price) AS min_price
 FROM
@@ -27,7 +27,8 @@ with DAG(
     default_args=args,
     schedule_interval='@once',  # set schedule - at every tenth minute
     start_date=days_ago(1),
-    is_paused_upon_creation=True
+    max_active_runs=1,
+    is_paused_upon_creation=False
 
 ) as dag:
 
@@ -117,7 +118,8 @@ with DAG(
         }
     )
 
-    gcs_parquet_ingestion >> aggregation_query
+    aggregation_query
 
 if __name__ == "__main__":
-    dag.cli()
+    # dag.cli()
+    dag.test()
