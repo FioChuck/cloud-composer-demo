@@ -4,11 +4,13 @@ Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that copy part
 
 This repo can also be used as a deployment template for Cloud Composer via GitHub Actions. The yaml defined in `/.github/workflows/ ` automates deployment into GCS and registers the DAG with Cloud Composer.
 
-Lastly, this repo is a great resource for learning Data Lineage in Dataplex. Cloud Composer and BigQuery both natively integrated with Data Lineage. The two workflows described in the repo automatically generate lineage processes and runs.
+Lastly, this repo is a great resource for learning Data Lineage in Dataplex. Cloud Composer and BigQuery both natively integrated with Data Lineage. The two workflows described in this repo automatically generate lineage processes and runs.
 
 # Overview
 
-The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow. Both workflows ingest and aggregate sample GOOGL stock data. The sample data was originally ingested into GCP using PubSub. This ingestion pattern is templatized [here](https://github.com/FioChuck/api-pubsub-ingest).
+The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow. Both DAGs ingest and aggregate sample GOOGL stock data. The sample data was originally ingested into GCP using PubSub and a [BigQuery Subscription](https://cloud.google.com/pubsub/docs/bigquery). This ingestion pattern is templatized [here](https://github.com/FioChuck/api-pubsub-ingest).
+
+### DAG 1
 
 The first DAG loads partitioned Parquet files from GCS into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter.
 
@@ -19,7 +21,9 @@ flowchart LR
 A("Cloud Storage") -->|GoogleCloudStorageToBigQueryOperator| B("BigQuery") -->|BigQueryInsertJobOperator| C("BigQuery")
 ```
 
-The second example DAG calls a Dataproc Spark Job using the [DataprocSubmitJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataproc.html) operator. The Spark job executes a jar file containing the following sample code:
+### DAG 2
+
+The second DAG calls a Dataproc Spark Job using the [DataprocSubmitJobOperator](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataproc.html) operator. The Spark job executes a jar file containing the following sample code:
 
 ```scala
 import org.apache.spark.sql.SparkSession
@@ -70,7 +74,7 @@ object BqDemo {
 }
 ```
 
-This sample jar file can be built and deployed using [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala). Notice the source parquet files are registered as a BigLake table allowing the dataframe reader to use `.format(bigquery)`.
+This sample jar file can be built and deployed using the template defined [here](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala). Notice the source parquet files are registered as a BigLake table which allot the dataframe reader to use `.format(bigquery)`.
 
 The entire process can be diagramed as follows:
 
