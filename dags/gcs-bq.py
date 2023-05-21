@@ -10,7 +10,7 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.googl_bq_summarized3` AS
+  `cf-data-analytics.composer_destination.googl_bq_summarized` AS
 SELECT
   symbol, 
   MAX(trade_price) AS max_price,

@@ -6,7 +6,7 @@ Both workflows aggregate trade samples into daily buckets. This repo can be used
 
 # Overview
 
-The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow. Both workflows ingest and aggregate sample GOOGL stock data. The sample data was originally ingested into GCP using PubSub. This ingestion pattern is saved as a template [here](https://github.com/FioChuck/api-pubsub-ingest).
+The DAGs included in the `/dags` folder simulate a typical ELT and ETL workflow. Both workflows ingest and aggregate sample GOOGL stock data. The sample data was originally ingested into GCP using PubSub. This ingestion pattern is templatized [here](https://github.com/FioChuck/api-pubsub-ingest).
 
 The first DAG loads partitioned Parquet files from GCS into BigQuery using the [GoogleCloudStorageToBigQueryOperator](https://airflow.apache.org/docs/apache-airflow/1.10.13/_api/airflow/contrib/operators/gcs_to_bq/index.html) Airflow Operator. This operator ingests the files into BigQuery and applies a Schema passed via the `schema_fields` parameter.
 
