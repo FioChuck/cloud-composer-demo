@@ -1,6 +1,8 @@
 # TL;DR
 
-Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that move partitioned Parquet files from Google Cloud Storage into BigQuery. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
+Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that move partitioned Parquet files from Google Cloud Storage into BigQuery. The partitioned files contain stock data ingested via the [Alpaca](https://alpaca.markets/) Market Data API. Follow [this template](https://github.com/FioChuck) for interfacing with the API.
+
+Both workflows aggregate trade samples into daily buckets. This repo can be used as a deployment template for Cloud Composer via GitHub Actions. It also acts as a Dataplex Data Lineage demo.
 
 # Overview
 
@@ -68,7 +70,7 @@ object BqDemo {
 
 ```
 
-This sample jar file can be built using the [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala).
+This sample jar file can be built and deployed using [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala). Notice the source parquet files are registered as a BigLake table allowing the dataframe reader to use `.format(bigquery)`.
 
 The entire process can be diagramed as follows:
 
@@ -76,6 +78,8 @@ The entire process can be diagramed as follows:
 flowchart LR
 A("Cloud Storage") -->|DataprocSubmitJobOperator| B("BigQuery")
 ```
+
+The DataprocSubmitJobOperator calls the Spark job defined above and aggregate the trade samples into daily buckets.
 
 # Setup
 
@@ -85,7 +89,7 @@ This project includes a yaml file for deployment to Google Cloud using Github Ac
 | ------------- | -------------------------------------------------------------- |
 | GCP_SA_KEY    | Service Account Key used to authenticate GitHub to GCP Project |
 
-The deployment yaml file found in `/.github/workflows/` defines the setup in two stages; a build stage followed by a deploy stage. These stages are described in detail below:
+The deployment yaml file found in `/.github/workflows/` defines the setup in two stages; a build stage followed by a deploy stage. Notice the `Delete previous DAG version` step has `continue-on-error: true`; this allows the step to progress even if the DAG has not yet been created. These stages are described in detail below:
 
 1. Build
    > - Authentication with GCP - [auth](https://github.com/google-github-actions/auth)
@@ -100,12 +104,14 @@ The deployment yaml file found in `/.github/workflows/` defines the setup in two
 
 ## Data Lineage
 
-This project is a great place to start learning Dataplex lineage. Currently _(2023)_ the lineage API supports Cloud Composer, BigQuery, and Data Fusion. All the processes in this project are supported and the dependencies will be autodetected if the lineage API is enabled.
+This project is a great way to learn Dataplex lineage. Currently _(2023)_ the lineage API supports Cloud Composer, BigQuery, and Data Fusion. All the processes in this project are supported and the dependencies will be autodetected if the lineage API is enabled.
 
-The following shell script must be executed in the destination project to enable Data Lineage. More info [here](https://cloud.google.com/composer/docs/composer-2/lineage-integration#enable-integration)
+The following shell script must be executed in the destination project to enable Data Lineage on a specific Cloud Composer pool. More info [here](https://cloud.google.com/composer/docs/composer-2/lineage-integration#enable-integration)
 
 ```shell
 gcloud beta composer environments update etl-orchestration-pool \
     --location us-central1 \
     --enable-cloud-data-lineage-integration
 ```
+
+Lastly, the `/lineage.sh` file contains example code for deleting data lineage at the process level. During development you may accidentally create unnecessary lineage events and want to delete the process.
