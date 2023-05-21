@@ -1,10 +1,10 @@
 # TL;DR
 
-Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that copy partitioned Parquet files from Google Cloud Storage into BigQuery. The partitioned files contain stock data ingested via the [Alpaca](https://alpaca.markets/) Market Data API. Follow [this template](https://github.com/FioChuck) for tips on interfacing with the API. Both workflows aggregate trade samples into daily buckets.
+Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that copy partitioned Parquet files from Google Cloud Storage into BigQuery. The partitioned files contain stock data ingested via the [Alpaca](https://alpaca.markets/) Market Data API. Follow [this template](https://github.com/FioChuck) for tips on interfacing with the API. Both workflows aggregate trade samples into daily buckets and save the summarized results into BigQuery.
 
 This repo can also be used as a deployment template for Cloud Composer via GitHub Actions. The yaml defined in `/.github/workflows/ ` automates deployment into GCS and registers the DAG with Cloud Composer.
 
-This repo is also a great resource for learning Data Lineage in Dataplex. Cloud Composer and BigQuery are both natively integrated with Data Lineage. The two workflows described in the repo automatically generate lineage processes and runs.
+Lastly, this repo is a great resource for learning Data Lineage in Dataplex. Cloud Composer and BigQuery both natively integrated with Data Lineage. The two workflows described in the repo automatically generate lineage processes and runs.
 
 # Overview
 
@@ -54,7 +54,6 @@ object BqDemo {
       .withColumnRenamed("max(trade_price)", "max_price")
 
     df2.show()
-    print("end")
 
     df2.write
       .format("bigquery")
@@ -69,7 +68,6 @@ object BqDemo {
       ) // define destination table
   }
 }
-
 ```
 
 This sample jar file can be built and deployed using [this template](https://github.com/FioChuck/scala_template/blob/master/src/main/scala/BqDemo.scala). Notice the source parquet files are registered as a BigLake table allowing the dataframe reader to use `.format(bigquery)`.
