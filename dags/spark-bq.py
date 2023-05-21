@@ -1,8 +1,6 @@
 from airflow import DAG
 from airflow.utils.dates import days_ago
-from airflow.providers.google.cloud.operators.dataproc import (
-    DataprocCreateBatchOperator, DataprocGetBatchOperator, DataprocSubmitJobOperator)
-from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
+from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
 from airflow.composer.data_lineage.entities import BigQueryTable
 
 
@@ -22,7 +20,7 @@ SPARK_JOB = {
 with DAG(
     dag_id='spark-bq',
     default_args=args,
-    schedule_interval=None,  # set schedule - at every tenth minute
+    schedule_interval=None,
     start_date=days_ago(1),
     max_active_runs=1,
     is_paused_upon_creation=False
@@ -46,3 +44,4 @@ with DAG(
 
 if __name__ == "__main__":
     dag.cli()
+    # dag.test()

@@ -2,7 +2,6 @@ from airflow import DAG
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
-from airflow.contrib.operators.bigquery_to_gcs import BigQueryToCloudStorageOperator
 
 
 args = {
@@ -11,7 +10,7 @@ args = {
 
 query = f"""
 CREATE OR REPLACE TABLE
-  `cf-data-analytics.composer_destination.googl_bq_summarized` AS
+  `cf-data-analytics.composer_destination.googl_bq_summarized3` AS
 SELECT
   symbol, 
   MAX(trade_price) AS max_price,
@@ -25,7 +24,7 @@ GROUP BY
 with DAG(
     dag_id='gcs-bq',
     default_args=args,
-    schedule_interval=None,  # set schedule - at every tenth minute
+    schedule_interval=None,
     start_date=days_ago(1),
     max_active_runs=1,
     is_paused_upon_creation=False

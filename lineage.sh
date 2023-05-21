@@ -10,6 +10,3 @@ curl -X POST \
 -H "Authorization: Bearer $(gcloud auth print-access-token)" \
 -H "Content-Type: application/json" \
 -d '{ "source": { "fully_qualified_name": "bigquery:cf-data-analytics.composer_destination.googl_bq_ingestion" } }'
-
-try gcloud composer environments run etl-orchestration-pool --location us-central1 dags delete -- spark-bq \
-catch echo "DAG does not exist"
