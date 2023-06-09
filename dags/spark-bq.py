@@ -10,7 +10,7 @@ args = {
 
 SPARK_JOB = {
     "reference": {"project_id": "cf-data-analytics"},
-    "placement": {"cluster_name": "cluster-a7bd"},
+    "placement": {"cluster_name": "cluster-904b"},
     "spark_job": {
         "jar_file_uris": ["gs://cf-spark-jobs/template/scala-2.12/file-creator-assembly-1.0.jar"],
         "main_class": "BqDemo",
