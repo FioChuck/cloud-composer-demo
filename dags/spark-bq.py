@@ -1,7 +1,6 @@
 from airflow import DAG
 from airflow.utils.dates import days_ago
 from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
-from airflow.composer.data_lineage.entities import BigQueryTable
 
 
 args = {
@@ -10,7 +9,7 @@ args = {
 
 SPARK_JOB = {
     "reference": {"project_id": "cf-data-analytics"},
-    "placement": {"cluster_name": "cluster-904b"},
+    "placement": {"cluster_name": "cluster-f866"},
     "spark_job": {
         "jar_file_uris": ["gs://cf-spark-jobs/template/scala-2.12/file-creator-assembly-1.0.jar"],
         "main_class": "BqDemo",
@@ -27,18 +26,7 @@ with DAG(
 ) as dag:
 
     spark_task = DataprocSubmitJobOperator(
-        task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics",
-        inlets=[BigQueryTable(
-            project_id="cf-data-analytics",
-            dataset_id='raw_zone',
-            table_id='googl_data',
-        )],
-        outlets=[BigQueryTable(
-            project_id="cf-data-analytics",
-            dataset_id='composer_destination',
-            table_id='googl_dataproc_summarized',
-        )]
-    )
+        task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics")
 
     spark_task
 
