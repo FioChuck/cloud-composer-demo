@@ -53,10 +53,10 @@ jobs:
           dags delete -- spark-bq"
 
       - name: "delete cloud composer dag2 from airflow"
+        continue-on-error: true
         run: "gcloud composer environments run etl-orchestration-pool \
           --location us-central1 \
           dags delete -- gcs-bq"
-        continue-on-error: true
 
       - name: "deploy cloud composer dag"
         run: "gcloud composer environments storage dags import \

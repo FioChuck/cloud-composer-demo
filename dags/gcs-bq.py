@@ -16,7 +16,7 @@ SELECT
   MAX(trade_price) AS max_price,
   MIN(trade_price) AS min_price
 FROM
-  cf-data-analytics.composer_destination.googl_bq_ingestion
+  cf-data-analytics.market_data.googl
 GROUP BY
   symbol;
 """
