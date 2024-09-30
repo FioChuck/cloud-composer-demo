@@ -29,6 +29,7 @@ with DAG(
     create_batch = DataprocCreateBatchOperator(
         task_id="batch_create",
         project_id="cf-data-analytics",
+        region="us-central1",
         batch={
             "name": "lineage-example",
                 "spark_batch": {
