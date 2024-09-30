@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.utils.dates import days_ago
-from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
+# from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
+from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator
 
 
 args = {
@@ -25,10 +26,36 @@ with DAG(
     is_paused_upon_creation=False
 ) as dag:
 
-    spark_task = DataprocSubmitJobOperator(
-        task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics")
+    create_batch = DataprocCreateBatchOperator(
+        task_id="batch_create",
+        project_id="cf-data-analytics",
+        batch={
+            "name": "lineage-example",
+                "spark_batch": {
+                    "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar",
 
-    spark_task
+                },
+            "environment_config": {
+                    "peripherals_config": {
+                    },
+            },
+            "runtime_config": {
+                    "version": "1.1.79"
+            }
+
+
+        },
+        batch_id="batch-create-phs",
+    )
+
+    #
+
+    # spark_task = DataprocSubmitJobOperator(
+    #     task_id="spark_task", job=SPARK_JOB, region="us-central1", project_id="cf-data-analytics")
+
+    # spark_task
+
+    create_batch
 
 if __name__ == "__main__":
     dag.cli()

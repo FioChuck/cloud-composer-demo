@@ -2,7 +2,7 @@ gcloud auth login
 
 curl -X DELETE \
 -H "Authorization: Bearer $(gcloud auth print-access-token)" \
--H "Content-Type: application.json" https://us-datalineage.googleapis.com/v1/projects/1089470781238/locations/us/processes/6fb05ef6485366ae44cc84ca259ccc9b
+-H "Content-Type: application.json" https://us-datalineage.googleapis.com/v1/projects/1089470781238/locations/us/processes/ecdd3ea103f9d3ce56e193a0784c2e82
 
 
 curl -X POST \
