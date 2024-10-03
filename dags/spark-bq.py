@@ -2,11 +2,13 @@ from airflow import DAG
 from airflow.utils.dates import days_ago
 # from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
 from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator, DataprocListBatchesOperator
+import uuid
 
 
 args = {
     'owner': 'packt-developer',
 }
+
 
 # SPARK_JOB = {
 #     "reference": {"project_id": "cf-data-analytics"},
@@ -26,6 +28,8 @@ with DAG(
     is_paused_upon_creation=False
 ) as dag:
 
+    name = str(uuid.uuid4())
+
     list_batches = DataprocListBatchesOperator(
         task_id="list-all-batches",
         project_id="cf-data-analytics",
@@ -42,10 +46,10 @@ with DAG(
             },
             "runtime_config": {
                 "version": "1.1",
-                "properties": {"spark:spark.dataproc.lineage.enabled": "true"}
+                "properties": {"spark.spark.dataproc.lineage.enabled": "true"}
             }
         },
-        batch_id="batch-create-phs",
+        batch_id=name,
     )
 
     #
