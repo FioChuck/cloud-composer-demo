@@ -40,7 +40,8 @@ with DAG(
             "spark_batch": {
                 "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"
             },
-        },
+            "runtime_config": {
+                "version": "1.1.79"}}
         batch_id="batch-create-phs",
     )
 
