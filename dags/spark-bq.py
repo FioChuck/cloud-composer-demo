@@ -38,13 +38,12 @@ with DAG(
         region="us-central1",
         batch={
             "name": "lineage-example",
-                "spark_batch": {
-                    "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar",
+                "sparkBatch": {
+                    "mainJarFileUri:": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar",
 
                 },
-            "environment_config": {
-                    "peripherals_config": {
-                    },
+            "runtimeConfig:": {
+                    "version:": "1.1.79"
                 }
 
         },
