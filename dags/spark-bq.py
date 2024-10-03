@@ -37,15 +37,10 @@ with DAG(
         project_id="cf-data-analytics",
         region="us-central1",
         batch={
-            "name": "lineage-example",
-                "sparkBatch": {
-                    "mainJarFileUri:": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar",
-
-                },
-            "runtimeConfig:": {
-                    "version:": "1.1.79"
-                }
-
+            "spark_batch": {
+                "jar_file_uris": ["gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"],
+                "main_class": "src.main.scala.Main",
+            },
         },
         batch_id="batch-create-phs",
     )
@@ -60,5 +55,5 @@ with DAG(
     list_batches >> create_batch
 
 if __name__ == "__main__":
-    dag.cli()
-    # dag.test()
+    # dag.cli()
+    dag.test()
