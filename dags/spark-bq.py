@@ -38,8 +38,7 @@ with DAG(
         region="us-central1",
         batch={
             "spark_batch": {
-                "jar_file_uris": ["gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"],
-                "main_class": "src.main.scala.Main",
+                "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"
             },
         },
         batch_id="batch-create-phs",
