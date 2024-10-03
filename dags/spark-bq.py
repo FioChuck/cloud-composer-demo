@@ -42,7 +42,7 @@ with DAG(
             },
             "runtime_config": {
                 "version": "1.1",
-                "properties": ["spark:spark.dataproc.lineage.enabled=true"]
+                "properties": {"spark:spark.dataproc.lineage.enabled": "true"}
             }
         },
         batch_id="batch-create-phs",
