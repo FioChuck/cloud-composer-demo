@@ -29,7 +29,7 @@ with DAG(
     list_batches = DataprocListBatchesOperator(
         task_id="list-all-batches",
         project_id="cf-data-analytics",
-        region="us-central1",
+        region="us-central1"
     )
 
     create_batch = DataprocCreateBatchOperator(
