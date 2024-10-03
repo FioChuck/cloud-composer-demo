@@ -45,8 +45,8 @@ with DAG(
                 "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"
             },
             "runtime_config": {
-                "version": "1.1",
-                "properties": {"spark.spark.dataproc.lineage.enabled": "true"}
+                "version": "1.1.179",
+                "properties": {"spark.dataproc.lineage.enabled": "true"}
             }
         },
         batch_id=name,
