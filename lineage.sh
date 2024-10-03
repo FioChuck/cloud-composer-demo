@@ -19,7 +19,7 @@ gs://datastream-change-stream/example_persons/**.jsonl
 gcloud dataproc clusters create cluster-f866 \
 --region us-central1 \
 --zone us-central1-a \
---image-version 2.1-debian11 \
+--image-version 2.2-debian12 \
 --project cf-data-analytics \
 --properties 'dataproc:dataproc.lineage.enabled=true' \
 --scopes https://www.googleapis.com/auth/cloud-platform
