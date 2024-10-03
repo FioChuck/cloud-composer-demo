@@ -1,7 +1,7 @@
 from airflow import DAG
 from airflow.utils.dates import days_ago
 # from airflow.providers.google.cloud.operators.dataproc import DataprocSubmitJobOperator
-from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator
+from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator, DataprocListBatchesOperator
 
 
 args = {
@@ -26,6 +26,10 @@ with DAG(
     is_paused_upon_creation=False
 ) as dag:
 
+    list_batches = DataprocListBatchesOperator(
+        task_id="list-all-batches",
+    )
+
     create_batch = DataprocCreateBatchOperator(
         task_id="batch_create",
         project_id="cf-data-analytics",
@@ -39,7 +43,7 @@ with DAG(
             "environment_config": {
                     "peripherals_config": {
                     },
-                }
+                    }
 
         },
         batch_id="batch-create-phs",
@@ -52,7 +56,7 @@ with DAG(
 
     # spark_task
 
-    create_batch
+    list_batches >> create_batch
 
 if __name__ == "__main__":
     dag.cli()
