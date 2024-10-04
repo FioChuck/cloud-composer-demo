@@ -14,8 +14,7 @@ SPARK_JOB = {
     "reference": {"project_id": "cf-data-analytics"},
     "placement": {"cluster_name": "cluster-f866"},
     "spark_job": {
-        "jar_file_uris": ["gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"],
-        "main_class": "Main",
+        "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"
     },
 }
 
