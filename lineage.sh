@@ -2,8 +2,7 @@ gcloud auth login
 
 curl -X DELETE \
 -H "Authorization: Bearer $(gcloud auth print-access-token)" \
--H "Content-Type: application.json" https://us-datalineage.googleapis.com/v1/projects/1089470781238/locations/us/processes/ecdd3ea103f9d3ce56e193a0784c2e82
-
+-H "Content-Type: application.json" https://us-central1-datalineage.googleapis.com/v1/projects/1089470781238/locations/us-central1/processes/2802cac6c0d4566958971e303371adae
 
 curl -X POST \
 'https://us-datalineage.googleapis.com/v1/projects/1089470781238/locations/us:searchLinks' \
@@ -18,8 +17,6 @@ gs://datastream-change-stream/example_persons/**.jsonl
 
 gcloud dataproc clusters create cluster-f866 \
 --region us-central1 \
---zone us-central1-a \
---image-version 2.1-debian11 \
 --project cf-data-analytics \
 --properties 'dataproc:dataproc.lineage.enabled=true' \
---scopes https://www.googleapis.com/auth/cloud-platform
+--image-version 2.0-debian10

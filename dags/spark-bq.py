@@ -12,9 +12,10 @@ args = {
 
 SPARK_JOB = {
     "reference": {"project_id": "cf-data-analytics"},
-    "placement": {"cluster_name": "cluster-f866"},
+    "placement": {"cluster_name": "cluster-e5a6"},
     "spark_job": {
-        "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar"
+        "main_jar_file_uri": "gs://cf-spark-jobs/spark-stock-transformations/scala-2.12/spark-window-functions-assembly-3.0.jar",
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.41.0.jar"]
     },
 }
 
