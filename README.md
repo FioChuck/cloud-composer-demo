@@ -2,7 +2,6 @@
 
 Two simple Cloud Composer Airflow DAGs _(Directed Acyclic Graph)_ that copy partitioned Parquet files from Google Cloud Storage into BigQuery. The partitioned files contain stock data ingested via the [Alpaca](https://alpaca.markets/) Market Data API. Follow [this template](https://github.com/FioChuck) for tips on interfacing with the API. Both workflows aggregate trade samples into daily buckets and save the summarized results into BigQuery.
 
-
 This repo can also be used as a deployment template for Cloud Composer via GitHub Actions. The yaml defined in `/.github/workflows/ ` automates deployment into GCS and registers the DAG with Cloud Composer.
 
 Lastly, this repo is a great resource for learning Data Lineage in Dataplex. Cloud Composer and BigQuery both natively integrated with Data Lineage. The two workflows described in this repo automatically generate lineage processes and runs.
